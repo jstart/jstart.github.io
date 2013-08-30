@@ -1,5 +1,9 @@
-Title: Startups Aren't The Only Place To Innovate
-Date: 2013-02-11 01:00 
+---
+layout: post
+title: Startups Aren't The Only Place To Innovate
+categories:
+- Innovation
+---
 
 Most of the readership of sites like [Techcrunch] [0], [Hacker News] [1], and the like want to work with only the [sexiest] [2], [most hyped] [3], [most disruptive] [4] startups.  It is exciting and validating to be working at a company that is constantly on the front page of your favorite news site.  You feel like you are on a [mission from God] [5] to disrupt some industry or to teach consumers that they need your new product.  This is great and I must admit I often find myself drawn towards the job pages of high profile startups because of the [internet fame] [6] that comes with working at these companies.  This is all well and good, and I don't discourage you from attempting to work at all the most exciting companies.  There are a few challenges at startups that can hold back a real entrepreneurial hustler from achieving their goals.
 

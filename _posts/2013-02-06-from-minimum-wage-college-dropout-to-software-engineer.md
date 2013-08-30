@@ -1,6 +1,9 @@
-Published: false
-Title: From Minimum Wage College Dropout to Software Engineer
-Date: 2013-02-06 02:50 
+---
+layout: post
+title: From Minimum Wage College Dropout to Software Engineer
+categories:
+- Innovation
+---
 
 I went from being an unemployed college dropout to a software engineer in 2 years.
 --------

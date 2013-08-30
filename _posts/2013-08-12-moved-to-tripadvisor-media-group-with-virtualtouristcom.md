@@ -1,5 +1,11 @@
-Title: Moved to TripAdvisor Media Group with VirtualTourist.com
-Date: 2013-08-12 05:34 
+
+---
+layout: post
+title: Moved to TripAdvisor Media Group with VirtualTourist.com
+categories:
+- Career
+---
+
 
 I have moved on again.  Well, it was back in March, but I haven't blogged since then, so consider this my announcement.  Just as I was getting excited to work on [some new projects][1] with [Citysearch][2], storms started brewing at [Citygrid][3].  I began to passively look for other job opportunities in case things went south with Citygrid.  Due to experiencing  [layoffs][4] and [changes in the executive team][5], I had reason to be wary.  I was offered a position with [Foursquare][6] that was mighty tempting, but I am currently grounded in LA due to family and my now fiancée.  So now I was stuck at a company in a very unsure position with no job prospects.  Luckily, my fiancée's father had recently started with TripAdvisor in November of '12 and had heard about an iOS developer position with [VirtualTourist][7] in the TripAdvisor LA office.  I was offered a position and took it immediately. 
 
