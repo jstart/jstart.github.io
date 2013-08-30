@@ -18,11 +18,7 @@ theme:
   # "Hi, I'm _______"
   name: Chris Truman
   email: cleetruman@gmail.com
-<<<<<<< HEAD
-  tagline: "weak opinions, strongly held"
-=======
   tagline: "iOS Developer in LA"
->>>>>>> a29f6d234ac966688675986bb51d873149ff01f4
 
   # Google Analytics key, leave blank to ignore
   google_analytics_key: UA-xxxx-x
