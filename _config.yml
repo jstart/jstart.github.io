@@ -1,6 +1,6 @@
 # General Jekyll Config
 pygments: true
-url: http://example.com
+url: http://ctruman.info
 lsi: false
 exclude: [LICENSE, CNAME, README.md, .gitignore]
 
@@ -14,6 +14,8 @@ theme:
     github: jstart
     twitter: chris__truman
     hacker_news: ctruman
+    google: 117181854404823173101
+    linkedin: christophertruman
 
   # "Hi, I'm _______"
   name: Chris Truman
@@ -21,7 +23,7 @@ theme:
   tagline: "iOS Developer in LA"
 
   # Google Analytics key, leave blank to ignore
-  google_analytics_key: UA-xxxx-x
+  google_analytics_key: UA-36352828-2
 
   # Toggle "Postings are my own" disclaimer in footer
   show_disclaimer: true
