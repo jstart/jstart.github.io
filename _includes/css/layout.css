@@ -20,6 +20,7 @@
 @media only screen and (min-width: 768px) and (max-width: 959px) {
 	nav {
 		width: 160px; }
+	
 	.sidebar h2 {
 		font-size: 18px;
 	}
@@ -49,6 +50,12 @@
 	.sidebar {
 		display: none;
 	}
+	
+	#social-mobile {
+		display: inline-block;
+		width: 90%;
+    	margin: 0 auto;
+	}
 
 	h1 {
 		font-size: 28px;
@@ -60,6 +67,12 @@
 @media only screen and (max-width: 479px) {
 	.sidebar {
 		display: none;
+	}
+	
+	#social-mobile {
+		display: inline-block;
+		width: 90%;
+    	margin: 0 auto;
 	}
 
 	h1 {
