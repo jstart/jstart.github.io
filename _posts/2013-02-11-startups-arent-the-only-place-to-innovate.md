@@ -34,7 +34,7 @@ CityGrid has a ton of sites with great SEO and existing user bases.  When we pub
 # Starved for Innovation
 My company is desperately looking for people with new ideas (and I'm sure many other aging tech companies are as well).  My company is scared of some new startup wiping them off the map.  They are willing to throw their money and resources at any idea with promise.  Imagine pitching a venture capitalist who is game for almost anything.  The company will work with you if you are creating good ideas, working with the existing teams and products, and leveraging what the company has.  
 
-These companies ***NEED*** [great][16] [product] [17] thinkers, excellent [designers] [18], and [talented engineers][19].  You can work on exciting products and truly innovate at large tech companies, despite what you may hear.  Jump into these companies and innovate from the inside out.  You just might find it a lot more satisfying than the hard work of starting a company.  
+These companies ***NEED*** great product thinkers, excellent designers, and talented engineers.  You can work on exciting products and truly innovate at large tech companies, despite what you may hear.  Jump into these companies and innovate from the inside out.  You just might find it a lot more satisfying than the hard work of starting a company.  
 
 Its not easy to push past the structure and old thinking at a company like CityGrid, but it is worth the effort.  You can help save these companies and bring them into the modern age.  In the meantime, I'll be doing my best to make CityGrid's products competitive with Yelp and Foursquare and every other competitor.  If you have feedback or completely disagree with me, hit me up [@chris__truman][20].
 
@@ -54,8 +54,4 @@ Its not easy to push past the structure and old thinking at a company like CityG
 [13]: http://www.urbanspoon.com/ "Urbanspoon"
 [14]: http://www.citysearch.com/ "Citysearch"
 [15]: http://www.InsiderPages.com/ "InsiderPages"
-[16]: https://tas-yahoo.taleo.net/careersection/yahoo_global_cs/jobdetail.ftl?job=1343014&lang=en&ylng=en&yloc=false "yahoo"
-[17]: https://tas-yahoo.taleo.net/careersection/yahoo_global_cs/jobdetail.ftl?job=1342849&lang=en&ylng=en&yloc=global "yahoo"
-[18]: http://hire.jobvite.com/CompanyJobs/Careers.aspx?k=Job&c=qz99Vfww&j=o1W8WfwL&s=Indeed "Media Temple"
-[19]: https://livenation.tms.hrdepartment.com/cgi-bin/a/highlightjob.cgi?jobid=3552&referrer=104&site_id=148&view_language=en-US "LiveNation"
 [20]: https://twitter.com/chris__truman
