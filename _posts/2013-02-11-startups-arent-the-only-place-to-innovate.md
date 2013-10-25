@@ -36,7 +36,7 @@ My company is desperately looking for people with new ideas (and I'm sure many o
 
 These companies ***NEED*** great product thinkers, excellent designers, and talented engineers.  You can work on exciting products and truly innovate at large tech companies, despite what you may hear.  Jump into these companies and innovate from the inside out.  You just might find it a lot more satisfying than the hard work of starting a company.  
 
-Its not easy to push past the structure and old thinking at a company like CityGrid, but it is worth the effort.  You can help save these companies and bring them into the modern age.  In the meantime, I'll be doing my best to make CityGrid's products competitive with Yelp and Foursquare and every other competitor.  If you have feedback or completely disagree with me, hit me up [@chris__truman][20].
+Its not easy to push past the structure and old thinking at a company like CityGrid, but it is worth the effort.  You can help save these companies and bring them into the modern age.  In the meantime, I'll be doing my best to make CityGrid's products competitive with Yelp and Foursquare and every other competitor.  If you have feedback or completely disagree with me, hit me up [@iAmChrisTruman][20].
 
 [0]: http://techcrunch.com/2012/10/10/shrink-to-grow-citysearch-and-urbanspoon-parent-company-citygrid-lays-off-15-of-its-employees/
 [1]: http://news.ycombinator.com/item?id=540503
@@ -54,4 +54,4 @@ Its not easy to push past the structure and old thinking at a company like CityG
 [13]: http://www.urbanspoon.com/ "Urbanspoon"
 [14]: http://www.citysearch.com/ "Citysearch"
 [15]: http://www.InsiderPages.com/ "InsiderPages"
-[20]: https://twitter.com/chris__truman
+[20]: https://twitter.com/iAmChrisTruman
