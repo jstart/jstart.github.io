@@ -4,7 +4,15 @@ title: Blog Posts
 ---
 
 <div id="home">
-  <h2><i class="icon-bookmark"></i> Blog Posts</h2>
+  <h2><i class="fa fa-mobile fa-2x"></i> My Apps</h2>
+<ul id="applist" class="apps">
+      <li><a href="https://itunes.apple.com/us/app/citysearch/id298458698?mt=8"><img src="http://a2.mzstatic.com/us/r30/Purple/v4/f2/c0/bb/f2c0bbec-04ef-c4eb-4dae-ff0ac2f40d82/mzl.nckzwqud.175x175-75.jpg" width="10%" height="10%"></a>
+      <li><a href="https://itunes.apple.com/us/app/battle-camp/id569929985?mt=8"><img src="http://a4.mzstatic.com/us/r30/Purple6/v4/32/3f/e8/323fe8db-306e-3692-231b-3afc4b04583d/mzl.hkgsoaxl.175x175-75.jpg" width="10%" height="10%"></a>
+      <li><a href="https://itunes.apple.com/us/app/cityseries/id364900044?mt=8"><img src="http://a4.mzstatic.com/us/r30/Purple/v4/e8/06/9f/e8069ff3-198e-5749-be51-7913bff391ce/mzl.jgviboap.175x175-75.jpg" width="10%" height="10%"></a>
+      <li><a href="https://itunes.apple.com/us/app/spot+go/id524294513?mt=8"><img src="http://a1.mzstatic.com/us/r30/Purple/v4/99/02/03/9902039f-fc8f-7f7d-cfe4-721716b1bf8b/mzl.bjayhgvy.175x175-75.jpg" width="10%" height="10%"></a>
+</li>
+  </ul>
+  <h2><i class="fa fa-bookmark"></i> Blog Posts</h2>
   <ul id="blog-posts" class="posts">
     {% for post in site.posts  limit: 10 %}
       <li><span>{{ post.date | date_to_string }} &raquo;</span><a href="{{ post.url }}">{{ post.title }}</a>

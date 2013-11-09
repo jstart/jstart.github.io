@@ -72,7 +72,7 @@ img {
   margin-right: auto;
 }
 
-ul.posts {
+ul.posts ul.apps {
   margin-top: 0;
   list-style-type: none;
   margin-bottom: 10px;
@@ -90,6 +90,16 @@ ul.posts span {
   padding-right: 5px;
   font-size:14px;
 }
+
+ul.apps img {
+  display: inline;
+}
+
+ul.apps li {
+  display: inline;
+  list-style-type: none;
+  padding-right: 20px;
+ }
 
 .meta {
   color: #aaa;
