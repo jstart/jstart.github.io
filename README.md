@@ -11,11 +11,6 @@ Extracted lovingly from [http://mdswanson.com][mds] for your enjoyment!
 * Open Sans from [Google web fonts][gfonts]
 * Built-in Atom RSS feed
 
-## Action Shots
-![](http://i.imgur.com/Pmzk4j1.png)
-![](http://i.imgur.com/CT2Xvug.png)
-![](http://i.imgur.com/XisjqW1.jpg)
-
 ## Installation
 
 - Install Jekyll: `gem install jekyll`
