@@ -1,6 +1,6 @@
 # General Jekyll Config
-pygments: true
 url: http://ctruman.info
+highlighter: pygments
 lsi: false
 exclude: [LICENSE, CNAME, README.md, .gitignore]
 markdown: kramdown
