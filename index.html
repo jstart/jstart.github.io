@@ -1180,13 +1180,13 @@
                 console.log(`✅ Enhanced ${enhancedCount} of ${precinctLayer.getLayers().length} precincts with full data`);
 
                 console.log('Map initialization complete with local data!');
-                updateMapColoring();
-                createLegend();
-                hideLoadingOverlay();
+                updateMapView();
+                legend.update();
+                showLoadingProgress(false);
 
             } catch (error) {
                 console.error('Error in map initialization:', error);
-                hideLoadingOverlay();
+                showLoadingProgress(false);
                 // Fall back to API approach
                 return initializeMapFallback();
             }
@@ -1288,73 +1288,7 @@
             console.log('Event listeners set up successfully');
         }
 
-        // --- MAIN APPLICATION LOGIC ---
-        async function initializeMap() {
-            console.log('Starting map initialization...');
-            try {
-                console.log('Fetching CSV and GeoJSON data...');
-                const [csvData, geojsonDataString] = await Promise.all([fetchData(csvUrl), fetchData(geojsonUrl)]);
-                console.log('Data fetched successfully, parsing...');
-                const geojsonFeatureCollection = JSON.parse(geojsonDataString);
-                const parsedCsv = Papa.parse(csvData, { header: true, dynamicTyping: true });
-                const overlayData = new Map(parsedCsv.data.map(row => [row.Precinct_ID, row]));
-                geojsonFeatureCollection.features = geojsonFeatureCollection.features.filter(f => overlayData.has(f.properties.PRECINCT));
-                geojsonFeatureCollection.features.forEach(f => Object.assign(f.properties, overlayData.get(f.properties.PRECINCT)));
-
-                console.log(`Creating precinct layer with ${geojsonFeatureCollection.features.length} features`);
-                precinctLayer = L.geoJSON(geojsonFeatureCollection, { style, onEachFeature }).addTo(map);
-                transitLayer = L.layerGroup();
-                parksLayer = L.layerGroup();
-
-                // Try to load data from localStorage (data saved from previous sessions)
-                try {
-                    let localData = null;
-                    let dataSource = '';
-
-                    const savedData = localStorage.getItem('torrance-precinct-data');
-                    if (savedData) {
-                        localData = JSON.parse(savedData);
-                        dataSource = 'browser cache';
-                        console.log("SUCCESS: Loading data from localStorage.");
-                    } else {
-                        console.log("No cached data found.");
-                    }
-
-                    // Apply the loaded data if we found any
-                    if (localData) {
-                        precinctLayer.getLayers().forEach(layer => {
-                            const precinctId = layer.feature.properties.Precinct_ID;
-                            if (localData[precinctId]) Object.assign(layer.feature.properties, localData[precinctId]);
-                        });
-                        info.update(null, `Demographic data loaded from ${dataSource}.`);
-                    } else {
-                        info.update(null, "Click 'Manage Data' to fetch census info.");
-                    }
-
-                } catch (e) {
-                    console.log("Error loading data:", e);
-                    info.update(null, "Click 'Manage Data' to fetch census info.");
-                }
-
-                precinctLayer.setStyle(style);
-                updateDataManagerUI();
-                setupEventListeners();
-
-                // Tighten map to precinct bounds after layer is ready
-                const bounds = precinctLayer.getBounds();
-                if (bounds && bounds.isValid()) {
-                    console.log('Fitting map to precinct bounds');
-                    map.fitBounds(bounds, { padding: [10, 10] });
-                }
-                map.on('moveend', () => { if (useDynamicScale) { precinctLayer.setStyle(style); legend.update(); } });
-                console.log('Map initialization completed successfully');
-                updateMapView();
-
-            } catch (error) {
-                console.error("Error initializing map:", error);
-                document.getElementById('map').innerHTML = `<div class="info" style="position:absolute;top:10px;left:10px;padding:10px;background-color:#f8d7da;color:#721c24;z-index:1000;"><strong>Error:</strong> Could not load map data.<br/>${error.message}</div>`;
-            }
-        }
+        // Duplicate initializeMap function removed - using the GitHub-enabled version above
 
         initializeMap();
 
