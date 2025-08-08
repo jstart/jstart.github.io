@@ -1,0 +1,25 @@
+---
+layout: default
+title: Blog Posts
+---
+
+<div id="home">
+  <h2><i class="fa fa-mobile fa"></i> My Work</h2>
+<ul id="applist" class="apps">
+      <li><a href="https://itunes.apple.com/us/app/eharmony/id458272450?mt=8"><img src="http://is2.mzstatic.com/image/thumb/Purple128/v4/81/6a/b5/816ab528-f74a-9ec1-1432-67f50c86b8ef/source/175x175bb.jpg" width="10%" height="10%"></a>
+      <li><a href="https://itunes.apple.com/us/app/citysearch/id298458698?mt=8"><img src="http://is2.mzstatic.com/image/thumb/Purple2/v4/f1/4c/82/f14c8240-abbc-23dd-e77e-1ab56437e21d/source/175x175bb.jpg" width="10%" height="10%"></a>
+      <li><a href="https://itunes.apple.com/us/app/battle-camp/id569929985?mt=8"><img src="http://is5.mzstatic.com/image/thumb/Purple128/v4/22/0a/23/220a237c-ce53-6bfd-b236-19e01fd8dd49/source/175x175bb.jpg" width="10%" height="10%"></a>
+      <li><a href="https://itunes.apple.com/us/app/cityseries/id364900044?mt=8"><img src="http://is5.mzstatic.com/image/thumb/Purple/v4/dc/43/d9/dc43d9f4-3873-5db8-f50c-b1df3e91aef9/source/350x350bb.jpg" width="10%" height="10%"></a>
+</li>
+  </ul>
+  <h2><i class="fa fa-bookmark"></i> Blog Posts</h2>
+  <ul id="blog-posts" class="posts">
+    {% for post in site.posts  limit: 10 %}
+      <li><span>{{ post.date | date_to_string }} &raquo;</span><a href="{{ post.url }}">{{ post.title }}</a>
+</li>
+    {% endfor %}
+  </ul>
+<p>
+  I also blog at <a href="https://medium.com/@iamchristruman">Medium</a>.
+</p>
+</div>
