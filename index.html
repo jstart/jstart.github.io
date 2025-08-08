@@ -199,8 +199,8 @@
         // --- DATA URLS ---
         const csvUrl = 'https://gist.githubusercontent.com/jstart/5957b92d8d1f60480de2d15654c555ca/raw/c66ae13821921707b79a0665b6acb02d7734ae85/torrance_precincts.csv';
         const geojsonUrl = 'https://gist.githubusercontent.com/jstart/0ba13db4475880d226b4e222a09bdfc8/raw/2e72a76fe9ac3cf6ae036c1977d5803cb9693a6e/test.geojson';
-        const fullDataUrl = 'Precinct_ACS_FullOverlay.csv'; // Local comprehensive data file
-        const variableLabelsUrl = 'acs_variable_labels.csv'; // Variable name mappings
+        const fullDataUrl = 'https://raw.githubusercontent.com/jstart/jstart.github.io/main/Precinct_ACS_FullOverlay.csv'; // Hosted comprehensive data file
+        const variableLabelsUrl = 'https://raw.githubusercontent.com/jstart/jstart.github.io/main/acs_variable_labels.csv'; // Hosted variable name mappings
 
         // --- CENSUS DATA CHUNKS DEFINITION (EXPANDED & HUMAN-READABLE) ---
         const censusDataChunks = {
@@ -1044,7 +1044,12 @@
             console.log('Loading variable labels...');
             try {
                 const response = await fetch(variableLabelsUrl);
-                if (!response.ok) throw new Error(`Failed to load variable labels: ${response.status}`);
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error(`Variable labels file not found. Please upload acs_variable_labels.csv to your GitHub repository.`);
+                    }
+                    throw new Error(`Failed to load variable labels: ${response.status}`);
+                }
 
                 const csvText = await response.text();
                 const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
@@ -1067,7 +1072,12 @@
             console.log('Loading full precinct data from:', fullDataUrl);
             try {
                 const response = await fetch(fullDataUrl);
-                if (!response.ok) throw new Error(`Failed to load full data: ${response.status} ${response.statusText}`);
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error(`Full data file not found. Please upload Precinct_ACS_FullOverlay.csv to your GitHub repository.`);
+                    }
+                    throw new Error(`Failed to load full data: ${response.status} ${response.statusText}`);
+                }
 
                 console.log('Full data file response received, parsing CSV...');
                 const csvText = await response.text();
