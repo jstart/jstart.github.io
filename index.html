@@ -199,7 +199,7 @@
         // --- DATA URLS ---
         const csvUrl = 'https://gist.githubusercontent.com/jstart/5957b92d8d1f60480de2d15654c555ca/raw/c66ae13821921707b79a0665b6acb02d7734ae85/torrance_precincts.csv';
         const geojsonUrl = 'https://gist.githubusercontent.com/jstart/0ba13db4475880d226b4e222a09bdfc8/raw/2e72a76fe9ac3cf6ae036c1977d5803cb9693a6e/test.geojson';
-        const fullDataUrl = 'Precinct_ACS_FullOverlay.json'; // Local comprehensive data file
+        const fullDataUrl = 'Precinct_ACS_FullOverlay.csv'; // Local comprehensive data file
         const variableLabelsUrl = 'acs_variable_labels.csv'; // Variable name mappings
 
         // --- CENSUS DATA CHUNKS DEFINITION (EXPANDED & HUMAN-READABLE) ---
@@ -1069,8 +1069,24 @@
                 const response = await fetch(fullDataUrl);
                 if (!response.ok) throw new Error(`Failed to load full data: ${response.status} ${response.statusText}`);
 
-                console.log('Full data file response received, parsing JSON...');
-                fullData = await response.json();
+                console.log('Full data file response received, parsing CSV...');
+                const csvText = await response.text();
+                const parsed = Papa.parse(csvText, { header: true, dynamicTyping: true, skipEmptyLines: true });
+                
+                if (parsed.errors && parsed.errors.length > 0) {
+                    console.warn('CSV parsing warnings:', parsed.errors);
+                }
+
+                // Convert CSV data to object format keyed by Precinct_ID
+                fullData = {};
+                parsed.data.forEach(row => {
+                    if (row.Precinct_ID) {
+                        // Create a copy without the Precinct_ID key since we use it as the object key
+                        const { Precinct_ID, ...precinctData } = row;
+                        fullData[Precinct_ID] = precinctData;
+                    }
+                });
+                
                 fullDataLoaded = true;
 
                 console.log(`✅ Loaded full data for ${Object.keys(fullData).length} precincts`);
