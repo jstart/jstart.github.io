@@ -199,8 +199,8 @@
         // --- DATA URLS ---
         const csvUrl = 'https://gist.githubusercontent.com/jstart/5957b92d8d1f60480de2d15654c555ca/raw/c66ae13821921707b79a0665b6acb02d7734ae85/torrance_precincts.csv';
         const geojsonUrl = 'https://gist.githubusercontent.com/jstart/0ba13db4475880d226b4e222a09bdfc8/raw/2e72a76fe9ac3cf6ae036c1977d5803cb9693a6e/test.geojson';
-        const fullDataUrl = 'https://raw.githubusercontent.com/jstart/jstart.github.io/main/Precinct_ACS_FullOverlay.csv'; // Hosted comprehensive data file
-        const variableLabelsUrl = 'https://raw.githubusercontent.com/jstart/jstart.github.io/main/acs_variable_labels.csv'; // Hosted variable name mappings
+        const fullDataUrl = 'https://raw.githubusercontent.com/jstart/jstart.github.io/refs/heads/master/Precinct_ACS_FullOverlay.csv'; // Hosted comprehensive data file
+        const variableLabelsUrl = 'https://raw.githubusercontent.com/jstart/jstart.github.io/refs/heads/master/acs_variable_labels.csv'; // Hosted variable name mappings
 
         // --- CENSUS DATA CHUNKS DEFINITION (EXPANDED & HUMAN-READABLE) ---
         const censusDataChunks = {
@@ -245,37 +245,37 @@
         income: { title: 'Household Income', legendTitle: 'Median Income ($)', var: 'DP03_0062E', unit: '$', type: 'currency', chunkKey: 'Income', palette: ['#FFFFCC','#C2E699','#78C679','#31A354','#006837'] },
         per_capita_income: { title: 'Per Capita Income', legendTitle: 'Per Capita Income ($)', var: 'DP03_0088E', unit: '$', type: 'currency', chunkKey: 'Income', palette: ['#FFFFCC','#C2E699','#78C679','#31A354','#006837'] },
         high_income: { title: 'High Income Households', legendTitle: 'Income $100k+ (%)', var: 'DP03_0059PE', unit: '%', type: 'percent', chunkKey: 'Income', palette: ['#F7FCF5','#C7E9C0','#74C476','#31A354','#006D2C'] },
-        
+
         // Employment & Work
         unemployment: { title: 'Unemployment Rate', legendTitle: 'Unemployment Rate (%)', var: 'DP03_0005PE', unit: '%', type: 'percent', chunkKey: 'Employment', palette: ['#FFF5EB','#FDBE85','#FD8D3C','#E6550D','#A63603'] },
         self_employed: { title: 'Self-Employed Workers', legendTitle: 'Self-Employed (%)', var: 'DP03_0049PE', unit: '%', type: 'percent', chunkKey: 'Employment', palette: ['#F7F7F7','#CCCCCC','#969696','#636363','#252525'] },
         government_workers: { title: 'Government Workers', legendTitle: 'Government Workers (%)', var: 'DP03_0048PE', unit: '%', type: 'percent', chunkKey: 'Employment', palette: ['#EDF8FB','#B2E2E2','#66C2A4','#2CA25F','#006D2C'] },
         professional_jobs: { title: 'Professional/Management Jobs', legendTitle: 'Professional Jobs (%)', var: 'DP03_0041PE', unit: '%', type: 'percent', chunkKey: 'Employment', palette: ['#F7FCF5','#C7E9C0','#74C476','#238B45','#005A32'] },
         work_from_home: { title: 'Work from Home', legendTitle: 'Work from Home (%)', var: 'DP03_0024PE', unit: '%', type: 'percent', chunkKey: 'Employment', palette: ['#FFF5F0','#FDD0A2','#FD8D3C','#D94801','#8C2D04'] },
-        
+
         // Education
         bachelors_plus: { title: 'Higher Education', legendTitle: "Bachelor's Degree+ (%)", var: 'DP02_0068PE', unit: '%', type: 'percent', chunkKey: 'Education', palette: ['#F7FCF5','#C7E9C0','#74C476','#238B45','#005A32'] },
         graduate_degree: { title: 'Graduate/Professional Degree', legendTitle: 'Graduate Degree (%)', var: 'DP02_0066PE', unit: '%', type: 'percent', chunkKey: 'Education', palette: ['#F7FCF5','#C7E9C0','#74C476','#238B45','#005A32'] },
         high_school_plus: { title: 'High School Education', legendTitle: 'High School+ (%)', var: 'DP02_0067PE', unit: '%', type: 'percent', chunkKey: 'Education', palette: ['#FFF5F0','#FDD0A2','#FD8D3C','#D94801','#8C2D04'] },
-        
+
         // Demographics & Diversity
         foreign_born: { title: 'Foreign-Born Population', legendTitle: 'Foreign-Born (%)', var: 'DP02_0094PE', unit: '%', type: 'percent', chunkKey: 'Demographics', palette: ['#F7F4F9','#D4B9DA','#C994C7','#DF65B0','#DD1C77'] },
         non_english: { title: 'Non-English Speaking', legendTitle: 'Language Other Than English (%)', var: 'DP02_0114PE', unit: '%', type: 'percent', chunkKey: 'Demographics', palette: ['#F7F4F9','#D4B9DA','#C994C7','#DF65B0','#DD1C77'] },
         spanish_speaking: { title: 'Spanish Speaking', legendTitle: 'Spanish Speaking (%)', var: 'DP02_0116PE', unit: '%', type: 'percent', chunkKey: 'Demographics', palette: ['#FFFFE5','#F7FCB9','#D9F0A3','#ADDD8E','#78C679'] },
-        
+
         // Health & Vulnerability
         uninsured: { title: 'No Health Insurance', legendTitle: 'Uninsured (%)', var: 'DP03_0099PE', unit: '%', type: 'percent', chunkKey: 'HealthInsurance', palette: ['#F1EEF6','#BDC9E1','#74A9CF','#2B8CBE','#045A8D'] },
         public_insurance: { title: 'Public Health Insurance', legendTitle: 'Public Insurance (%)', var: 'DP03_0098PE', unit: '%', type: 'percent', chunkKey: 'HealthInsurance', palette: ['#FFF5F0','#FDD0A2','#FD8D3C','#D94801','#8C2D04'] },
         disability: { title: 'Population with Disabilities', legendTitle: 'Disability Rate (%)', var: 'DP02_0072PE', unit: '%', type: 'percent', chunkKey: 'Health', palette: ['#F7F7F7','#CCCCCC','#969696','#636363','#252525'] },
         food_stamps: { title: 'Food Assistance (SNAP)', legendTitle: 'SNAP Benefits (%)', var: 'DP03_0074PE', unit: '%', type: 'percent', chunkKey: 'Assistance', palette: ['#FFEDA0','#FC4E2A','#E31A1C','#BD0026','#800026'] },
-        
-        // Housing & Mobility  
+
+        // Housing & Mobility
         households_children: { title: 'Families with Children', legendTitle: 'Households with Children <18 (%)', var: 'DP02_0014PE', unit: '%', type: 'percent', chunkKey: 'Family', palette: ['#F7FCF5','#C7E9C0','#74C476','#238B45','#005A32'] },
         households_seniors: { title: 'Households with Seniors', legendTitle: 'Households with 65+ (%)', var: 'DP02_0015PE', unit: '%', type: 'percent', chunkKey: 'Family', palette: ['#F7F4F9','#D4B9DA','#C994C7','#DF65B0','#DD1C77'] },
         single_person: { title: 'Single-Person Households', legendTitle: 'Living Alone (%)', var: 'DP02_0008PE', unit: '%', type: 'percent', chunkKey: 'Family', palette: ['#F7F7F7','#CCCCCC','#969696','#636363','#252525'] },
         housing_stability: { title: 'Housing Stability', legendTitle: 'Same House 1 Year Ago (%)', var: 'DP02_0080PE', unit: '%', type: 'percent', chunkKey: 'Mobility', palette: ['#F7FCF5','#C7E9C0','#74C476','#238B45','#005A32'] },
         residential_mobility: { title: 'Residential Mobility', legendTitle: 'Moved in Past Year (%)', var: 'DP02_0081PE', unit: '%', type: 'percent', chunkKey: 'Mobility', palette: ['#FFF5F0','#FDD0A2','#FD8D3C','#D94801','#8C2D04'] },
-        
+
         // Transportation
         commute_drive_alone: { title: 'Drive Alone to Work', legendTitle: 'Drive Alone (%)', var: 'DP03_0019PE', unit: '%', type: 'percent', chunkKey: 'Commuting', palette: ['#FEE5D9','#FCAE91','#FB6A4A','#DE2D26','#A50F15'] },
         public_transit: { title: 'Public Transportation', legendTitle: 'Public Transit (%)', var: 'DP03_0021PE', unit: '%', type: 'percent', chunkKey: 'Commuting', palette: ['#EFF3FF','#BDD7E7','#6BAED6','#3182BD','#08519C'] },
@@ -1082,7 +1082,7 @@
                 console.log('Full data file response received, parsing CSV...');
                 const csvText = await response.text();
                 const parsed = Papa.parse(csvText, { header: true, dynamicTyping: true, skipEmptyLines: true });
-                
+
                 if (parsed.errors && parsed.errors.length > 0) {
                     console.warn('CSV parsing warnings:', parsed.errors);
                 }
@@ -1096,17 +1096,17 @@
                         fullData[Precinct_ID] = precinctData;
                     }
                 });
-                
+
                 fullDataLoaded = true;
 
                 console.log(`✅ Loaded full data for ${Object.keys(fullData).length} precincts`);
-                
+
                 // Log sample of data structure
                 const sampleKey = Object.keys(fullData)[0];
                 if (sampleKey) {
                     console.log('Sample precinct data structure:', Object.keys(fullData[sampleKey]).slice(0, 10));
                 }
-                
+
                 return true;
             } catch (error) {
                 console.error('Error loading full data:', error);
@@ -1123,18 +1123,21 @@
             console.log('Starting map initialization...');
             try {
                 // Load variable labels and full data
-                console.log('Loading variable labels and full data...');
+                console.log('Loading variable labels and full data from GitHub...');
                 const [labelsLoaded, dataLoaded] = await Promise.all([
                     loadVariableLabels(),
                     loadFullData()
                 ]);
 
                 if (!labelsLoaded) {
-                    console.warn('Variable labels failed to load, using raw variable names');
+                    console.warn('⚠️ Variable labels failed to load from GitHub, using raw variable names');
+                    console.log('ℹ️ To fix this: Upload acs_variable_labels.csv to your GitHub repository');
                 }
 
                 if (!dataLoaded) {
-                    console.error('Full data failed to load, falling back to API approach');
+                    console.warn('⚠️ Full census data file not found on GitHub, falling back to API approach');
+                    console.log('ℹ️ To fix this: Upload Precinct_ACS_FullOverlay.csv to your GitHub repository');
+                    console.log('ℹ️ Falling back to individual API calls for census data');
                     // Fall back to original API-based initialization
                     return initializeMapFallback();
                 }
@@ -1191,7 +1194,8 @@
 
         // Fallback to original API-based initialization
         async function initializeMapFallback() {
-            console.log('Using fallback API-based initialization...');
+            console.log('📊 Using fallback API-based initialization...');
+            console.log('ℹ️ Census data will be fetched individually via API calls');
             try {
                 console.log('Fetching CSV and GeoJSON data...');
                 const [csvData, geojsonDataString] = await Promise.all([fetchData(csvUrl), fetchData(geojsonUrl)]);
@@ -1356,7 +1360,7 @@
 
         // Log cache information
         console.log('%c🚌🌳 Torrance Data Visualizer with Smart Caching', 'color: #228B22; font-size: 16px; font-weight: bold;');
-        console.log('%cOverlay data is cached for 30 minutes to improve performance', 'color: #666;');
+        console.log('%cOverlay data is cached for 10 weeks to improve performance', 'color: #666;');
         console.log('%cUse clearOverlayCache() to refresh cache or getCacheStats() to see cache status', 'color: #666;');
     </script>
 </body>
