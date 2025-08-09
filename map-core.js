@@ -8,6 +8,9 @@ export let currentDataType = 'renter';
 export let useDynamicScale = true; // Always on
 export let info, legend, overlayLegend;
 
+// Import overlay loading functions (lazy import to avoid circular dependencies)
+let loadTransit, loadParks, transitLoaded, parksLoaded;
+
 export function initializeMapCore() {
     // Initialize the map
     map = L.map('map').setView([33.8358, -118.3406], 10);
@@ -40,10 +43,10 @@ function initializeInfoControl() {
         let content = 'Hover over a precinct.';
 
         if (statusMessage) content = `<em>${statusMessage}</em>`;
-        else if (cfg) content = 'Data from U.S. Census (ACS).';
+        else if (cfg) content = '<div style="margin-left: 8px; color: #333;">Data from U.S. Census (ACS).</div>';
 
         if (props) {
-            content = `<b>Precinct: ${props.Precinct_ID}</b><br/>Area: ${props.Area_Name}`;
+            content = `<div style="padding: 40px;"><strong>Precinct:</strong> ${props.Precinct_ID}`;
             // Always show a few common fields when available
             if (cfgsAvailable) {
                 const renterCfg = METRICS_CONFIG.renter;
@@ -52,20 +55,21 @@ function initializeInfoControl() {
                 const incomeCfg = METRICS_CONFIG.income;
 
                 if (props[renterCfg.var] !== undefined && props[renterCfg.var] >= 0)
-                    content += `<br/>Renter: ${formatValue(props[renterCfg.var], renterCfg)}`;
+                    content += `<br/><strong>Renter:</strong> ${formatValue(props[renterCfg.var], renterCfg)}`;
                 if (props[povertyCfg.var] !== undefined && props[povertyCfg.var] >= 0)
-                    content += `<br/>Poverty: ${formatValue(props[povertyCfg.var], povertyCfg)}`;
+                    content += `<br/><strong>Poverty:</strong> ${formatValue(props[povertyCfg.var], povertyCfg)}`;
                 if (props[unempCfg.var] !== undefined && props[unempCfg.var] >= 0)
-                    content += `<br/>Unemployment: ${formatValue(props[unempCfg.var], unempCfg)}`;
+                    content += `<br/><strong>Unemployment:</strong> ${formatValue(props[unempCfg.var], unempCfg)}`;
                 if (props[incomeCfg.var] !== undefined && props[incomeCfg.var] >= 0)
-                    content += `<br/>Mean Income: ${formatValue(props[incomeCfg.var], incomeCfg)}`;
+                    content += `<br/><strong>Mean Income:</strong> ${formatValue(props[incomeCfg.var], incomeCfg)}`;
             }
 
             if (cfg && props[cfg.var] !== undefined && props[cfg.var] >= 0 && !['renter','poverty','unemployment','income'].includes(currentDataType)) {
-                content += `<br/>${cfg.legendTitle}: ${formatValue(props[cfg.var], cfg)}`;
+                content += `<br/><strong>${cfg.legendTitle}:</strong> ${formatValue(props[cfg.var], cfg)}`;
             }
+            content += '</div>';
         }
-        this._div.innerHTML = `<h4>${title}</h4>${content}`;
+        this._div.innerHTML = `<div style="font-size: 16px; font-weight: bold; color: #333;">${title}</div>${content}`;
     };
     info.addTo(map);
 
@@ -132,10 +136,10 @@ function initializeLegendControls() {
 
         if (transitOn || parksOn) lines.push('<strong>Overlays</strong>');
         if (transitOn) {
-            lines.push(`<i style="background:#1f77b4;border-radius:50%;width:12px;height:12px;margin-top:3px"></i> Transit Stop`);
+            lines.push(`🚌 Transit Stop`);
         }
         if (parksOn) {
-            lines.push(`<i style="background:rgba(34,139,34,0.3);border:2px solid #228B22;width:12px;height:12px;margin-top:3px"></i> Park`);
+            lines.push(`🌳 Park`);
         }
 
         if (lines.length === 0) {
@@ -161,11 +165,11 @@ function getVisibleValues(cfg) {
             undefinedCount++;
         }
     });
-    
+
     if (vals.length === 0) {
         console.log(`⚠️ No data found for ${cfg.var} (${cfg.title}). ${undefinedCount} precincts have undefined values.`);
     }
-    
+
     return vals;
 }
 
@@ -267,17 +271,33 @@ export function updateMapView() {
     // Update info panel
     info.update();
 
-    // Update overlays
-    updateOverlays();
+    // Update overlays (async call but don't block the UI)
+    updateOverlays().catch(error => {
+        console.error('Error updating overlays:', error);
+    });
 }
 
-function updateOverlays() {
+async function updateOverlays() {
+    // Lazy load the overlay functions if not already loaded
+    if (!loadTransit) {
+        const overlaysModule = await import('./overlays.js');
+        loadTransit = overlaysModule.loadTransit;
+        loadParks = overlaysModule.loadParks;
+        transitLoaded = overlaysModule.transitLoaded;
+        parksLoaded = overlaysModule.parksLoaded;
+    }
+
     const transitOn = document.getElementById('toggle-transit')?.checked;
     const parksOn = document.getElementById('toggle-parks')?.checked;
 
     // Handle transit overlay
     if (transitOn) {
         if (!map.hasLayer(transitLayer)) transitLayer.addTo(map);
+        // Auto-load transit data if not already loaded
+        if (transitLayer.getLayers().length === 0) {
+            console.log('🚌 Auto-loading transit data...');
+            await loadTransit();
+        }
     } else {
         if (map.hasLayer(transitLayer)) map.removeLayer(transitLayer);
     }
@@ -285,6 +305,11 @@ function updateOverlays() {
     // Handle parks overlay
     if (parksOn) {
         if (!map.hasLayer(parksLayer)) parksLayer.addTo(map);
+        // Auto-load parks data if not already loaded
+        if (parksLayer.getLayers().length === 0) {
+            console.log('🌳 Auto-loading parks data...');
+            await loadParks();
+        }
     } else {
         if (map.hasLayer(parksLayer)) map.removeLayer(parksLayer);
     }

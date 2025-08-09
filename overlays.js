@@ -166,96 +166,122 @@ async function fetchAndDisplayOverpassDataCached(layerGroup, query, cache, optio
 }
 
 export async function loadTransit() {
-    const {s,w,n,e} = getMapBBox();
-    const q = `
-    [out:json][timeout:25][bbox:${s},${w},${n},${e}];
-    (
-      node["highway"="bus_stop"];
-      node["railway"="station"];
-      node["public_transport"="stop_position"];
-      node["public_transport"="platform"];
-      way["railway"="station"];
-      way["public_transport"="station"];
-    );
-    out body center;`;
+    try {
+        console.log('🚌 Starting loadTransit()...');
+        const {s,w,n,e} = getMapBBox();
+        console.log('🚌 Map bounds:', {s,w,n,e});
 
-    showLoadingProgress(true, 'Loading transit stops from OSM...', 0);
-    await fetchAndDisplayOverpassDataCached(transitLayer, q, transitCache, {
-        pointColor: '#1f77b4',
-        emojiIcon: '🚌'
-    }, (tags, lat, lng)=>{
-        // Use the most descriptive name available
-        const name = tags.name || tags.ref || tags['name:en'] || 'Unnamed Stop';
-        const type = tags.highway || tags.railway || tags.public_transport || 'transit';
-        const operator = tags.operator ? `<br/>Operator: ${tags.operator}` : '';
-        const route = tags.route_ref ? `<br/>Routes: ${tags.route_ref}` : '';
-        const address = tags['addr:full'] || tags['addr:street'] || '';
-        const googleMapsLink = createGoogleMapsLink(lat, lng, name, address);
-        return `<b>🚌 ${name}</b><br/>Type: ${type}${operator}${route}<br/>${googleMapsLink}`;
-    });
+        const q = `
+        [out:json][timeout:25][bbox:${s},${w},${n},${e}];
+        (
+          node["highway"="bus_stop"];
+          node["railway"="station"];
+          node["public_transport"="stop_position"];
+          node["public_transport"="platform"];
+          way["railway"="station"];
+          way["public_transport"="station"];
+        );
+        out body center;`;
 
-    showLoadingProgress(false);
-    transitLoaded = true;
-    overlayLegend.update();
+        console.log('🚌 Query:', q);
+        showLoadingProgress(true, 'Loading transit stops from OSM...', 0);
+
+        await fetchAndDisplayOverpassDataCached(transitLayer, q, transitCache, {
+            pointColor: '#1f77b4',
+            emojiIcon: '🚌'
+        }, (tags, lat, lng)=>{
+            // Use the most descriptive name available
+            const name = tags.name || tags.ref || tags['name:en'] || 'Unnamed Stop';
+            const type = tags.highway || tags.railway || tags.public_transport || 'transit';
+            const operator = tags.operator ? `<br/>Operator: ${tags.operator}` : '';
+            const route = tags.route_ref ? `<br/>Routes: ${tags.route_ref}` : '';
+            const address = tags['addr:full'] || tags['addr:street'] || '';
+            const googleMapsLink = createGoogleMapsLink(lat, lng, name, address);
+            return `<b>🚌 ${name}</b><br/>Type: ${type}${operator}${route}<br/>${googleMapsLink}`;
+        });
+
+        showLoadingProgress(false);
+        transitLoaded = true;
+        overlayLegend.update();
+        console.log('🚌 Transit loading completed successfully!');
+
+    } catch (error) {
+        console.error('🚌 Error in loadTransit():', error);
+        showLoadingProgress(false);
+        info.update(null, `Transit loading failed: ${error.message}`);
+    }
 }
 
 export async function loadParks() {
-    const {s,w,n,e} = getMapBBox();
-    const q = `
-    [out:json][timeout:25][bbox:${s},${w},${n},${e}];
-    (
-      node["leisure"="park"];
-      node["leisure"="garden"];
-      node["leisure"="playground"];
-      node["leisure"="nature_reserve"];
-      node["leisure"="sports_centre"];
-      node["leisure"="recreation_ground"];
-      node["amenity"="park"];
-      node["amenity"="community_centre"];
-      node["landuse"="recreation_ground"];
-      node["landuse"="forest"];
-      node["landuse"="grass"];
-      node["natural"="wood"];
-      node["natural"="grassland"];
-      way["leisure"="park"];
-      way["leisure"="garden"];
-      way["leisure"="nature_reserve"];
-      way["leisure"="recreation_ground"];
-      way["leisure"="sports_centre"];
-      way["landuse"="recreation_ground"];
-      way["landuse"="forest"];
-      way["landuse"="grass"];
-      way["landuse"="greenfield"];
-      way["natural"="wood"];
-      way["natural"="grassland"];
-      way["amenity"="community_centre"];
-      relation["leisure"="park"];
-      relation["leisure"="nature_reserve"];
-      relation["landuse"="recreation_ground"];
-      relation["landuse"="forest"];
-      relation["natural"="wood"];
-    );
-    out body geom center tags;`;
+    try {
+        console.log('🌳 Starting loadParks()...');
+        const {s,w,n,e} = getMapBBox();
+        console.log('🌳 Map bounds:', {s,w,n,e});
 
-    showLoadingProgress(true, 'Loading parks from OSM...', 0);
-    await fetchAndDisplayOverpassDataCached(parksLayer, q, parksCache, {
-        isPolygon: true,
-        polygonColor: '#228B22',
-        emojiIcon: '🌳'
-    }, (tags, lat, lng)=>{
-        // Use the most descriptive name available
-        const name = tags.name || tags['name:en'] || tags.amenity || tags.leisure || 'Unnamed Park';
-        const type = tags.leisure || tags.landuse || tags.amenity || 'park';
-        const operator = tags.operator ? `<br/>Operated by: ${tags.operator}` : '';
-        const website = tags.website ? `<br/><a href="${tags.website}" target="_blank" style="color: #228B22;">🌐 Website</a>` : '';
-        const address = tags['addr:full'] || tags['addr:street'] || '';
-        const googleMapsLink = createGoogleMapsLink(lat, lng, name, address);
-        return `<b>🌳 ${name}</b><br/>Type: ${type}${operator}${website}<br/>${googleMapsLink}`;
-    });
+        const q = `
+        [out:json][timeout:25][bbox:${s},${w},${n},${e}];
+        (
+          node["leisure"="park"];
+          node["leisure"="garden"];
+          node["leisure"="playground"];
+          node["leisure"="nature_reserve"];
+          node["leisure"="sports_centre"];
+          node["leisure"="recreation_ground"];
+          node["amenity"="park"];
+          node["amenity"="community_centre"];
+          node["landuse"="recreation_ground"];
+          node["landuse"="forest"];
+          node["landuse"="grass"];
+          node["natural"="wood"];
+          node["natural"="grassland"];
+          way["leisure"="park"];
+          way["leisure"="garden"];
+          way["leisure"="nature_reserve"];
+          way["leisure"="recreation_ground"];
+          way["leisure"="sports_centre"];
+          way["landuse"="recreation_ground"];
+          way["landuse"="forest"];
+          way["landuse"="grass"];
+          way["landuse"="greenfield"];
+          way["natural"="wood"];
+          way["natural"="grassland"];
+          way["amenity"="community_centre"];
+          relation["leisure"="park"];
+          relation["leisure"="nature_reserve"];
+          relation["landuse"="recreation_ground"];
+          relation["landuse"="forest"];
+          relation["natural"="wood"];
+        );
+        out body geom center tags;`;
 
-    showLoadingProgress(false);
-    parksLoaded = true;
-    overlayLegend.update();
+        console.log('🌳 Query:', q);
+        showLoadingProgress(true, 'Loading parks from OSM...', 0);
+
+        await fetchAndDisplayOverpassDataCached(parksLayer, q, parksCache, {
+            isPolygon: true,
+            polygonColor: '#228B22',
+            emojiIcon: '🌳'
+        }, (tags, lat, lng)=>{
+            // Use the most descriptive name available
+            const name = tags.name || tags['name:en'] || tags.amenity || tags.leisure || 'Unnamed Park';
+            const type = tags.leisure || tags.landuse || tags.amenity || 'park';
+            const operator = tags.operator ? `<br/>Operated by: ${tags.operator}` : '';
+            const website = tags.website ? `<br/><a href="${tags.website}" target="_blank" style="color: #228B22;">🌐 Website</a>` : '';
+            const address = tags['addr:full'] || tags['addr:street'] || '';
+            const googleMapsLink = createGoogleMapsLink(lat, lng, name, address);
+            return `<b>🌳 ${name}</b><br/>Type: ${type}${operator}${website}<br/>${googleMapsLink}`;
+        });
+
+        showLoadingProgress(false);
+        parksLoaded = true;
+        overlayLegend.update();
+        console.log('🌳 Parks loading completed successfully!');
+
+    } catch (error) {
+        console.error('🌳 Error in loadParks():', error);
+        showLoadingProgress(false);
+        info.update(null, `Parks loading failed: ${error.message}`);
+    }
 }
 
 // Cache management functions

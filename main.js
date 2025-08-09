@@ -63,7 +63,12 @@ async function initializeApplication() {
         const bounds = precinctLayer.getBounds();
         if (bounds && bounds.isValid()) {
             console.log('Fitting map to precinct bounds');
-            map.fitBounds(bounds, { padding: [10, 10] });
+            // Get the center of the bounds
+            const center = bounds.getCenter();
+            console.log('Setting map center to:', center, 'with zoom level 14');
+
+            // Set to a specific high zoom level instead of using fitBounds
+            map.setView([center.lat, center.lng], 13, { animate: true });
         }
 
         // Initial update of map view
@@ -109,7 +114,7 @@ function setupEventListeners() {
     document.getElementById('toggle-transit').addEventListener('change', updateMapView);
     document.getElementById('toggle-parks').addEventListener('change', updateMapView);
     document.getElementById('save-data-btn').addEventListener('click', saveDataToFile);
-    document.getElementById('fetch-all-btn').addEventListener('click', fetchAllChunks);
+    // document.getElementById('fetch-all-btn').addEventListener('click', fetchAllChunks);
     document.getElementById('manage-data-btn').addEventListener('click', () => {
         document.getElementById('data-manager-panel').style.display = 'block';
     });

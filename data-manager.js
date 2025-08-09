@@ -11,7 +11,7 @@ export let fullData = {};
 export async function fetchFipsCode(layer) {
     const props = layer.feature.properties;
     if (props.FIPS) return;
-    
+
     const center = layer.getBounds().getCenter();
     try {
         const response = await fetch(`https://geo.fcc.gov/api/census/block/find?latitude=${center.lat}&longitude=${center.lng}&format=json`);
@@ -36,7 +36,7 @@ export async function loadVariableLabels() {
     try {
         const csvData = await fetchData(DATA_URLS.variableLabels);
         const parsed = Papa.parse(csvData, { header: true });
-        
+
         parsed.data.forEach(row => {
             if (row.Variable && row.Label) {
                 variableLabels[row.Variable] = row.Label;
@@ -44,18 +44,18 @@ export async function loadVariableLabels() {
         });
 
         console.log(`Loaded ${Object.keys(variableLabels).length} variable labels`);
-        
+
         // Show which config variables we have labels for
         const allConfigVars = Object.values(METRICS_CONFIG).map(metric => metric.var);
         const foundVars = allConfigVars.filter(v => variableLabels[v]);
         const missingVars = allConfigVars.filter(v => !variableLabels[v]);
-        
+
         console.log(`🔍 Found labels for ${foundVars.length}/${allConfigVars.length} config variables`);
         console.log(`🔍 Sample found variables: ${foundVars.slice(0, 5).join(', ')}`);
         if (missingVars.length > 0) {
             console.log(`⚠️ Missing labels for ${missingVars.length} variables: ${missingVars.slice(0, 5).join(', ')}`);
         }
-        
+
         // Show sample variable labels
         const sampleLabels = Object.entries(variableLabels).slice(0, 3);
         console.log(`🔍 Sample variable labels:`, sampleLabels);
@@ -72,10 +72,10 @@ export async function loadVariableLabels() {
     }
 
     console.log('🔍 Starting loadFullData() with JSON...');
-    
+
     try {
         await loadVariableLabels();
-        
+
         console.log('Loading full demographic data from JSON...');
         showLoadingProgress(true, 'Loading demographic data...', 25);
 
@@ -83,7 +83,7 @@ export async function loadVariableLabels() {
         const cacheBuster = new Date().getTime();
         const response = await fetch(`${DATA_URLS.fullData}?v=${cacheBuster}`);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        
+
         const jsonData = await response.json();
         console.log('Parsing demographic data...');
         showLoadingProgress(true, 'Processing demographic data...', 50);
@@ -101,13 +101,13 @@ export async function loadVariableLabels() {
         });
 
         console.log(`🔍 Loaded full data for ${Object.keys(fullData).length} precincts`);
-        
+
         // Debug: show sample data structure
         const firstPrecinct = Object.keys(fullData)[0];
         if (firstPrecinct) {
             const allColumns = Object.keys(fullData[firstPrecinct]);
             console.log(`🔍 Total JSON properties: ${allColumns.length}`);
-            
+
             // Check for specific columns we need (updated to use JSON field names)
             const testVars = [
                 'Percent!!CLASS OF WORKER!!Civilian employed population 16 years and over!!Government workers',
@@ -119,7 +119,7 @@ export async function loadVariableLabels() {
                     console.log(`🔍 Found direct variable ${varName} = ${fullData[firstPrecinct][varName]}`);
                 }
             });
-            
+
             // Check for government worker related columns
             const govColumns = allColumns.filter(col => col.includes('Government'));
             console.log(`🔍 Government-related properties found: ${govColumns.length}`);
@@ -127,7 +127,7 @@ export async function loadVariableLabels() {
                 console.log(`🔍 Sample government properties:`, govColumns.slice(0, 3));
             }
         }
-        
+
         fullDataLoaded = true;
 
         // Mark all demographic categories as loaded since JSON contains comprehensive data
@@ -165,31 +165,31 @@ function applyFullDataToLayers() {
     console.log('Applying full demographic data to map layers...');
     console.log(`🔍 Available variables in variableLabels: ${Object.keys(variableLabels).length}`);
     console.log(`🔍 Available data for precincts: ${Object.keys(fullData).length}`);
-    
+
     let appliedCount = 0;
     let mappingCount = 0;
 
     precinctLayer.getLayers().forEach(layer => {
         const props = layer.feature.properties;
         const precinctId = props.Precinct_ID || props.PRECINCT;
-        
+
         if (precinctId && fullData[precinctId]) {
             const demographicData = fullData[precinctId];
-            
+
             // Apply data using direct field name mapping (since JSON uses descriptive field names)
             Object.values(METRICS_CONFIG).forEach(metric => {
                 const variable = metric.var;
-                
+
                 // For JSON data with descriptive field names, use the variable directly
                 let value = demographicData[variable];
-                
+
                 // Enhanced debugging for key variables
                 if (variable.includes('Government workers') || variable.includes('POVERTY') || variable.includes('HOUSING TENURE')) {
                     console.log(`🔍 Debug - Precinct: ${layer.feature.properties.NAME || precinctId}`);
                     console.log(`   Variable: ${variable.substring(0, 80)}...`);
                     console.log(`   Value: "${value}" (type: ${typeof value})`);
                 }
-                
+
                 if (value !== undefined && value !== '' && value !== null) {
                     // Convert string values to numbers
                     if (typeof value === 'string') {
@@ -198,14 +198,14 @@ function applyFullDataToLayers() {
                             value = numValue;
                         }
                     }
-                    
+
                     // Validate values for percentage fields - if value > 100, likely raw count not percentage
                     if (metric.type === 'percent' && typeof value === 'number' && value > 100) {
                         const precinctName = layer.feature.properties.NAME || layer.feature.properties.Precinct_ID || 'Unknown';
                         console.log(`⚠️ Skipping ${variable} - value ${value} too high for percentage - Precinct: ${precinctName}`);
                         return; // Skip this mapping
                     }
-                    
+
                     props[variable] = value;
                     mappingCount++;
                     if (mappingCount <= 10) {
@@ -217,14 +217,14 @@ function applyFullDataToLayers() {
                     }
                 }
             });
-            
+
             appliedCount++;
         }
     });
 
     console.log(`Applied demographic data to ${appliedCount} precincts with ${mappingCount} total mappings`);
     info.update(null, `Demographic data loaded for ${appliedCount} precincts`);
-    
+
     // Update the data manager UI to reflect loaded data
     updateDataManagerUI();
 }
@@ -232,14 +232,14 @@ function applyFullDataToLayers() {
 export async function fetchCensusChunk(layer, varList) {
     const props = layer.feature.properties;
     if (!props.FIPS) return;
-    
+
     try {
         const [state, county, tract] = [props.FIPS.substring(0, 2), props.FIPS.substring(2, 5), props.FIPS.substring(5, 11)];
         const censusUrl = `https://api.census.gov/data/2022/acs/acs5/profile?get=${varList.join(',')}&for=tract:${tract}&in=state:${state}&in=county:${county}`;
         const response = await fetch(censusUrl);
         if (!response.ok) throw new Error(`Census API Error`);
         const censusData = await response.json();
-        
+
         if (censusData && censusData.length > 1) {
             varList.forEach((variable, index) => {
                 const val = parseFloat(censusData[1][index]);
@@ -343,7 +343,7 @@ export async function fetchAllChunks() {
         showLoadingProgress(true, `Fetching ${name} (${i + 1} of ${total})...`, ((i) / total) * 100);
         await fetchAllDataForChunk(key);
     }
-    
+
     showLoadingProgress(false);
     info.update(null, 'All census chunks fetched.');
     console.log('Completed fetching all census chunks.');
@@ -357,8 +357,8 @@ function saveToLocalStorage() {
             if (props.Precinct_ID) {
                 const precinctData = { FIPS: props.FIPS };
                 const allVars = [...BASE_CENSUS_VARS, ...Object.values(CENSUS_DATA_CHUNKS).flatMap(c => c.vars)];
-                allVars.forEach(v => { 
-                    if (props[v] !== undefined) precinctData[v] = props[v]; 
+                allVars.forEach(v => {
+                    if (props[v] !== undefined) precinctData[v] = props[v];
                 });
                 dataToSave[props.Precinct_ID] = precinctData;
             }
@@ -377,8 +377,8 @@ export function saveDataToFile() {
         if (props.Precinct_ID) {
             const precinctData = { FIPS: props.FIPS };
             const allVars = [...BASE_CENSUS_VARS, ...Object.values(CENSUS_DATA_CHUNKS).flatMap(c => c.vars)];
-            allVars.forEach(v => { 
-                if (props[v] !== undefined) precinctData[v] = props[v]; 
+            allVars.forEach(v => {
+                if (props[v] !== undefined) precinctData[v] = props[v];
             });
             dataToSave[props.Precinct_ID] = precinctData;
         }
@@ -406,7 +406,7 @@ export function saveDataToFile() {
 export function updateDataManagerUI() {
     const container = document.getElementById('data-chunks-container');
     if (!container || !precinctLayer || precinctLayer.getLayers().length === 0) return;
-    
+
     container.innerHTML = '';
     const firstLayerProps = precinctLayer.getLayers()[0].feature.properties;
 
@@ -415,10 +415,10 @@ export function updateDataManagerUI() {
         const isLoaded = fullDataLoaded || chunk.vars.every(v => firstLayerProps[v] !== undefined);
         const div = document.createElement('div');
         div.className = 'data-chunk';
-        
+
         let statusText = '';
         let buttonText = '';
-        
+
         if (fullDataLoaded) {
             statusText = ' (Available in JSON)';
             buttonText = 'View';  // Change from "Fetch" to "View" since data is already loaded
@@ -429,7 +429,7 @@ export function updateDataManagerUI() {
             statusText = ' (Not Loaded)';
             buttonText = 'Fetch';
         }
-        
+
         div.innerHTML = `
             <div>
                 <span>${chunk.name}</span>
