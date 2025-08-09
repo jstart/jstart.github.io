@@ -12,8 +12,12 @@ export let info, legend, overlayLegend;
 let loadTransit, loadParks, transitLoaded, parksLoaded;
 
 export function initializeMapCore() {
-    // Initialize the map
-    map = L.map('map').setView([33.8358, -118.3406], 10);
+    // Initialize the map with zoom control disabled
+    map = L.map('map', { zoomControl: false }).setView([33.8358, -118.3406], 10);
+
+    // Add custom zoom control in bottom left position
+    L.control.zoom({ position: 'bottomleft' }).addTo(map);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);

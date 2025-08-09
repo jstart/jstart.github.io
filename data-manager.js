@@ -51,21 +51,94 @@ export async function loadVariableLabels() {
         const missingVars = allConfigVars.filter(v => !variableLabels[v]);
 
         console.log(`🔍 Found labels for ${foundVars.length}/${allConfigVars.length} config variables`);
-        console.log(`🔍 Sample found variables: ${foundVars.slice(0, 5).join(', ')}`);
+        
+        // Create fallback labels for missing variables
         if (missingVars.length > 0) {
-            console.log(`⚠️ Missing labels for ${missingVars.length} variables: ${missingVars.slice(0, 5).join(', ')}`);
+            console.log(`📋 Creating fallback labels for ${missingVars.length} missing variables...`);
+            
+            missingVars.forEach(varName => {
+                // Find the config that uses this variable
+                const configEntry = Object.entries(METRICS_CONFIG).find(([key, config]) => config.var === varName);
+                if (configEntry) {
+                    const [configKey, config] = configEntry;
+                    variableLabels[varName] = createFallbackLabel(varName, config.label || configKey);
+                }
+            });
+            
+            console.log(`✅ Created fallback labels for ${missingVars.length} variables`);
         }
-
-        // Show sample variable labels
-        const sampleLabels = Object.entries(variableLabels).slice(0, 3);
-        console.log(`🔍 Sample variable labels:`, sampleLabels);
 
         showLoadingProgress(false);
     } catch (error) {
         console.error('Error loading variable labels:', error);
         showLoadingProgress(false);
     }
-}export async function loadFullData() {
+}
+
+/**
+ * Create a readable label from ACS field name or config info
+ */
+function createFallbackLabel(fieldName, configLabel) {
+    // If we have a config label, use it
+    if (configLabel && configLabel !== fieldName) {
+        return configLabel;
+    }
+    
+    // Parse common ACS patterns and create readable labels
+    let label = fieldName;
+    
+    // Remove "Percent!!" prefix and clean up separators
+    label = label.replace(/^Percent!!/, '');
+    label = label.replace(/!!/g, ' - ');
+    
+    // Common ACS category mappings
+    const categoryMappings = {
+        'HOUSING TENURE': 'Housing Tenure',
+        'Occupied housing units': 'Housing Units',
+        'Owner-occupied': 'Owner Occupied',
+        'Renter-occupied': 'Renter Occupied',
+        'RACE': 'Race',
+        'One race': 'Single Race',
+        'White alone': 'White',
+        'Black or African American alone': 'Black/African American',
+        'Asian alone': 'Asian',
+        'Native Hawaiian and Other Pacific Islander alone': 'Pacific Islander',
+        'American Indian and Alaska Native alone': 'Native American',
+        'Some other race alone': 'Other Race',
+        'Two or more races': 'Multiracial',
+        'HISPANIC OR LATINO ORIGIN': 'Hispanic/Latino',
+        'Not Hispanic or Latino': 'Non-Hispanic',
+        'INCOME AND BENEFITS': 'Income',
+        'POVERTY LEVEL': 'Poverty Level',
+        'Total households': 'Households',
+        'EDUCATIONAL ATTAINMENT': 'Education Level',
+        'Population 25 years and over': 'Adults 25+',
+        'AGE': 'Age Groups',
+        'EMPLOYMENT STATUS': 'Employment'
+    };
+    
+    // Apply category mappings
+    Object.keys(categoryMappings).forEach(key => {
+        if (label.includes(key)) {
+            label = label.replace(key, categoryMappings[key]);
+        }
+    });
+    
+    // Clean up and format
+    label = label
+        .replace(/\s+/g, ' ')
+        .replace(/\s*-\s*/g, ' - ')
+        .trim();
+    
+    // Limit length and add ellipsis if too long
+    if (label.length > 60) {
+        label = label.substring(0, 57) + '...';
+    }
+    
+    return label || fieldName; // Fallback to original field name if all else fails
+}
+
+export async function loadFullData() {
     if (fullDataLoaded) {
         console.log('Full data already loaded');
         return;
@@ -103,30 +176,30 @@ export async function loadVariableLabels() {
         console.log(`🔍 Loaded full data for ${Object.keys(fullData).length} precincts`);
 
         // Debug: show sample data structure
-        const firstPrecinct = Object.keys(fullData)[0];
-        if (firstPrecinct) {
-            const allColumns = Object.keys(fullData[firstPrecinct]);
-            console.log(`🔍 Total JSON properties: ${allColumns.length}`);
+        // const firstPrecinct = Object.keys(fullData)[0];
+        // if (firstPrecinct) {
+        //     const allColumns = Object.keys(fullData[firstPrecinct]);
+        //     console.log(`🔍 Total JSON properties: ${allColumns.length}`);
 
             // Check for specific columns we need (updated to use JSON field names)
-            const testVars = [
-                'Percent!!CLASS OF WORKER!!Civilian employed population 16 years and over!!Government workers',
-                'Percent!!PERCENTAGE OF FAMILIES AND PEOPLE WHOSE INCOME IN THE PAST 12 MONTHS IS BELOW THE POVERTY LEVEL!!All people',
-                'Percent!!HOUSING TENURE!!Occupied housing units!!Renter-occupied'
-            ];
-            testVars.forEach(varName => {
-                if (fullData[firstPrecinct][varName] !== undefined) {
-                    console.log(`🔍 Found direct variable ${varName} = ${fullData[firstPrecinct][varName]}`);
-                }
-            });
+            // const testVars = [
+            //     'Percent!!CLASS OF WORKER!!Civilian employed population 16 years and over!!Government workers',
+            //     'Percent!!PERCENTAGE OF FAMILIES AND PEOPLE WHOSE INCOME IN THE PAST 12 MONTHS IS BELOW THE POVERTY LEVEL!!All people',
+            //     'Percent!!HOUSING TENURE!!Occupied housing units!!Renter-occupied'
+            // ];
+            // testVars.forEach(varName => {
+            //     if (fullData[firstPrecinct][varName] !== undefined) {
+            //         console.log(`🔍 Found direct variable ${varName} = ${fullData[firstPrecinct][varName]}`);
+            //     }
+            // });
 
             // Check for government worker related columns
-            const govColumns = allColumns.filter(col => col.includes('Government'));
-            console.log(`🔍 Government-related properties found: ${govColumns.length}`);
-            if (govColumns.length > 0) {
-                console.log(`🔍 Sample government properties:`, govColumns.slice(0, 3));
-            }
-        }
+            // const govColumns = allColumns.filter(col => col.includes('Government'));
+            // console.log(`🔍 Government-related properties found: ${govColumns.length}`);
+            // if (govColumns.length > 0) {
+            //     console.log(`🔍 Sample government properties:`, govColumns.slice(0, 3));
+            // }
+        // }
 
         fullDataLoaded = true;
 
@@ -184,11 +257,11 @@ function applyFullDataToLayers() {
                 let value = demographicData[variable];
 
                 // Enhanced debugging for key variables
-                if (variable.includes('Government workers') || variable.includes('POVERTY') || variable.includes('HOUSING TENURE')) {
-                    console.log(`🔍 Debug - Precinct: ${layer.feature.properties.NAME || precinctId}`);
-                    console.log(`   Variable: ${variable.substring(0, 80)}...`);
-                    console.log(`   Value: "${value}" (type: ${typeof value})`);
-                }
+                // if (variable.includes('Government workers') || variable.includes('POVERTY') || variable.includes('HOUSING TENURE')) {
+                //     console.log(`🔍 Debug - Precinct: ${layer.feature.properties.NAME || precinctId}`);
+                //     console.log(`   Variable: ${variable.substring(0, 80)}...`);
+                //     console.log(`   Value: "${value}" (type: ${typeof value})`);
+                // }
 
                 if (value !== undefined && value !== '' && value !== null) {
                     // Convert string values to numbers

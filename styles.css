@@ -30,11 +30,189 @@ body {
     font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
+    position: relative;
 }
 
 #map {
     height: 100vh;
     width: 100%;
+}
+
+/* Fullscreen styles */
+body.fullscreen {
+    overflow: hidden;
+}
+
+body.fullscreen #map {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999;
+}
+
+body.fullscreen .control-panel {
+    z-index: 1001;
+}
+
+#fullscreen-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+#fullscreen-btn:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+#fullscreen-icon {
+    font-size: 16px;
+    line-height: 1;
+}
+
+/* Desktop zoom control positioning - bottom left to avoid info overlay */
+.leaflet-control-container .leaflet-bottom.leaflet-left {
+    bottom: 20px;
+    left: 20px;
+}
+
+.leaflet-control-zoom {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    border: 1px solid #ccc;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    /* Show minimize button on mobile */
+    .control-panel-header {
+        display: flex !important;
+    }
+
+    .control-panel {
+        top: 5px;
+        right: 5px;
+        left: 5px;
+        max-width: none;
+        padding: 0;
+        font-size: 14px;
+    }
+
+    .control-panel.minimized {
+        left: auto;
+        right: 5px;
+        width: auto;
+        min-width: auto;
+    }
+
+    #controls {
+        gap: 6px;
+        padding: 12px;
+    }
+
+    .toggle-label {
+        padding: 10px 8px;
+        font-size: 16px;
+        min-height: 44px; /* Touch-friendly */
+        border: 2px solid #dee2e6; /* Thicker border for easier targeting */
+    }
+
+    .toggle-label:active {
+        background-color: #f8f9fa;
+        transform: scale(0.98);
+    }
+
+    .custom-control {
+        padding: 12px 16px;
+        font-size: 16px;
+        min-height: 44px; /* Touch-friendly */
+        width: 100%;
+        border: 2px solid #ccc; /* Thicker border for easier targeting */
+    }
+
+    .custom-control:active {
+        background-color: #e9ecef;
+        transform: scale(0.98);
+    }
+
+    #data-selector {
+        font-size: 16px;
+        padding: 12px 10px;
+        min-height: 44px; /* Touch-friendly */
+        border: 2px solid #dee2e6;
+    }
+
+    /* Enhanced map interactions for mobile */
+    .leaflet-container {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Hide zoom controls on mobile */
+    .leaflet-control-zoom {
+        display: none !important;
+    }
+
+    /* Better popup styling on mobile */
+    .leaflet-popup-content {
+        font-size: 16px !important;
+        line-height: 1.4 !important;
+        margin: 10px 12px !important;
+    }
+
+    .leaflet-popup-content h4 {
+        font-size: 18px !important;
+        margin-bottom: 8px !important;
+    }
+
+    /* Hide fullscreen text on very small screens */
+    @media (max-width: 480px) {
+        #fullscreen-text {
+            display: none;
+        }
+
+        .control-panel {
+            top: 2px;
+            right: 2px;
+            left: 2px;
+            padding: 0;
+        }
+
+        .control-panel.minimized {
+            left: auto;
+            right: 2px;
+            top: 2px;
+        }
+
+        #controls {
+            gap: 4px;
+            padding: 10px;
+        }
+
+        .minimize-btn {
+            width: 36px;
+            height: 36px;
+            font-size: 20px;
+        }
+    }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .control-panel {
+        top: 2px;
+        right: 2px;
+        max-height: calc(100vh - 4px);
+        overflow-y: auto;
+    }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .custom-control, .toggle-label {
+        border-width: 1px; /* Thinner borders on high DPI to compensate */
+    }
 }
 
 /* Control Panel Styles - Enhanced visibility */
@@ -44,7 +222,7 @@ body {
     right: 10px;
     z-index: 1000;
     background: white;
-    padding: 15px;
+    padding: 0;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.3);
     border: 2px solid #007bff; /* Debug border */
@@ -53,6 +231,48 @@ body {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
+    transition: all 0.3s ease;
+}
+
+.control-panel.minimized {
+    min-width: auto;
+    max-width: none;
+    width: auto;
+}
+
+.control-panel-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 6px 6px 0 0;
+    border-bottom: 1px solid #dee2e6;
+    display: none; /* Hidden by default on desktop */
+}
+
+.minimize-btn {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.minimize-btn:hover {
+    background: #e9ecef;
+    border-color: #007bff;
+}
+
+.minimize-btn:active {
+    transform: scale(0.95);
 }
 
 #controls {
@@ -62,8 +282,13 @@ body {
     visibility: visible !important;
     opacity: 1 !important;
     background: #f8f9fa; /* Debug background */
-    padding: 10px;
-    border-radius: 4px;
+    padding: 15px;
+    border-radius: 0 0 6px 6px;
+    transition: all 0.3s ease;
+}
+
+.control-panel.minimized #controls {
+    display: none !important;
 }
 
 .leaflet-control {
@@ -162,6 +387,37 @@ body {
 .custom-control:hover {
     background-color: #f8f9fa;
     border-color: #007bff;
+}
+
+/* Optgroup styling for categorized dropdown */
+#data-selector optgroup {
+    font-weight: bold;
+    font-size: 13px;
+    color: #495057;
+    background-color: #f8f9fa;
+    padding: 4px 8px;
+    margin-top: 2px;
+}
+
+#data-selector optgroup:first-of-type {
+    margin-top: 0;
+}
+
+#data-selector option {
+    font-weight: normal;
+    font-size: 14px;
+    color: #212529;
+    padding: 6px 12px;
+    background-color: white;
+}
+
+#data-selector option:hover {
+    background-color: #e3f2fd;
+}
+
+/* Add some spacing between optgroups */
+#data-selector {
+    line-height: 1.4;
 }
 
 #manage-data-btn {

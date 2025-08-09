@@ -22,36 +22,61 @@
     <div id="map"></div>
 
     <div class="control-panel">
+        <div class="control-panel-header">
+            <button id="minimize-btn" class="minimize-btn" title="Hide Controls">
+                <span id="minimize-icon">−</span>
+            </button>
+        </div>
         <div id="controls">
             <select id="data-selector" class="custom-control">
-                <option value="renter">Renter Demographics</option>
-                <option value="poverty">Poverty Demographics</option>
-                <option value="income">Household Income</option>
-                <option value="per_capita_income">Per Capita Income</option>
-                <option value="high_income">High Income Households</option>
-                <option value="unemployment">Unemployment Rate</option>
-                <option value="self_employed">Self-Employed Workers</option>
-                <option value="government_workers">Government Workers</option>
-                <option value="professional_jobs">Professional/Management Jobs</option>
-                <option value="work_from_home">Work from Home</option>
-                <option value="bachelors_plus">Higher Education</option>
-                <option value="graduate_degree">Graduate/Professional Degree</option>
-                <option value="high_school_plus">High School Education</option>
-                <option value="foreign_born">Foreign-Born Population</option>
-                <option value="non_english">Non-English Speaking</option>
-                <option value="spanish_speaking">Spanish Speaking</option>
-                <option value="uninsured">No Health Insurance</option>
-                <option value="public_insurance">Public Health Insurance</option>
-                <option value="disability">Population with Disabilities</option>
-                <option value="food_stamps">Food Assistance (SNAP)</option>
-                <option value="households_children">Families with Children</option>
-                <option value="households_seniors">Households with Seniors</option>
-                <option value="single_person">Single-Person Households</option>
-                <option value="housing_stability">Housing Stability</option>
-                <option value="residential_mobility">Residential Mobility</option>
-                <option value="commute_drive_alone">Drive Alone to Work</option>
-                <option value="public_transit">Public Transportation</option>
-                <option value="commute_time">Mean Travel Time</option>
+                <optgroup label="🏠 Housing & Economic Status">
+                    <option value="renter">Renter Demographics</option>
+                    <option value="poverty">Poverty Demographics</option>
+                    <option value="income">Household Income</option>
+                    <option value="per_capita_income">Per Capita Income</option>
+                    <option value="high_income">High Income Households</option>
+                </optgroup>
+                
+                <optgroup label="💼 Employment & Work">
+                    <option value="unemployment">Unemployment Rate</option>
+                    <option value="self_employed">Self-Employed Workers</option>
+                    <option value="government_workers">Government Workers</option>
+                    <option value="professional_jobs">Professional/Management Jobs</option>
+                    <option value="work_from_home">Work from Home</option>
+                </optgroup>
+                
+                <optgroup label="🎓 Education">
+                    <option value="bachelors_plus">Higher Education</option>
+                    <option value="graduate_degree">Graduate/Professional Degree</option>
+                    <option value="high_school_plus">High School Education</option>
+                </optgroup>
+                
+                <optgroup label="🌍 Demographics & Diversity">
+                    <option value="foreign_born">Foreign-Born Population</option>
+                    <option value="non_english">Non-English Speaking</option>
+                    <option value="spanish_speaking">Spanish Speaking</option>
+                </optgroup>
+                
+                <optgroup label="🏥 Health & Social Services">
+                    <option value="uninsured">No Health Insurance</option>
+                    <option value="public_insurance">Public Health Insurance</option>
+                    <option value="disability">Population with Disabilities</option>
+                    <option value="food_stamps">Food Assistance (SNAP)</option>
+                </optgroup>
+                
+                <optgroup label="👨‍👩‍👧‍👦 Family & Household Structure">
+                    <option value="households_children">Families with Children</option>
+                    <option value="households_seniors">Households with Seniors</option>
+                    <option value="single_person">Single-Person Households</option>
+                </optgroup>
+                
+                <optgroup label="🚗 Mobility & Transportation">
+                    <option value="housing_stability">Housing Stability</option>
+                    <option value="residential_mobility">Residential Mobility</option>
+                    <option value="commute_drive_alone">Drive Alone to Work</option>
+                    <option value="public_transit">Public Transportation</option>
+                    <option value="commute_time">Mean Travel Time</option>
+                </optgroup>
             </select>
 
             <div class="leaflet-control">
@@ -63,6 +88,11 @@
                 <label class="toggle-label">
                     <input type="checkbox" id="toggle-parks" /> Parks
                 </label>
+            </div>
+            <div class="leaflet-control">
+                <button id="fullscreen-btn" class="custom-control">
+                    <span id="fullscreen-icon">⛶</span> <span id="fullscreen-text">Fullscreen</span>
+                </button>
             </div>
             <div class="leaflet-control">
                 <button id="manage-data-btn" class="custom-control">Manage Data</button>

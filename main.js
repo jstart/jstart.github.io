@@ -59,6 +59,9 @@ async function initializeApplication() {
         // Setup UI and event listeners
         setupEventListeners();
 
+        // Initialize mobile-specific state
+        initializeMobileState();
+
         // Fit map to precincts
         const bounds = precinctLayer.getBounds();
         if (bounds && bounds.isValid()) {
@@ -115,6 +118,13 @@ function setupEventListeners() {
     document.getElementById('toggle-parks').addEventListener('change', updateMapView);
     document.getElementById('save-data-btn').addEventListener('click', saveDataToFile);
     // document.getElementById('fetch-all-btn').addEventListener('click', fetchAllChunks);
+
+    // Fullscreen functionality
+    document.getElementById('fullscreen-btn').addEventListener('click', toggleFullscreen);
+
+    // Minimize panel functionality
+    document.getElementById('minimize-btn').addEventListener('click', toggleControlPanel);
+
     document.getElementById('manage-data-btn').addEventListener('click', () => {
         document.getElementById('data-manager-panel').style.display = 'block';
     });
@@ -137,6 +147,15 @@ function setupEventListeners() {
         });
     }
 
+    // Handle window resize to manage mobile state changes
+    window.addEventListener('resize', () => {
+        // Debounce resize events
+        clearTimeout(window.resizeTimeout);
+        window.resizeTimeout = setTimeout(() => {
+            initializeMobileState();
+        }, 250);
+    });
+
     // Respond to map movement for dynamic styling
     map.on('moveend', () => {
         if (precinctLayer) {
@@ -145,6 +164,123 @@ function setupEventListeners() {
     });
 
     console.log('Event listeners set up successfully');
+}
+
+// Initialize mobile-specific UI state
+function initializeMobileState() {
+    // Check if device is mobile based on screen width
+    const isMobile = window.innerWidth <= 768;
+
+    if (isMobile) {
+        // Minimize control panel by default on mobile
+        const controlPanel = document.querySelector('.control-panel');
+        const minimizeIcon = document.getElementById('minimize-icon');
+
+        controlPanel.classList.add('minimized');
+        minimizeIcon.textContent = '+';
+        minimizeIcon.parentElement.setAttribute('title', 'Show Controls');
+
+        console.log('Mobile device detected - control panel minimized by default');
+    }
+}
+
+// Fullscreen functionality
+function toggleFullscreen() {
+    const isFullscreen = document.body.classList.contains('fullscreen');
+    const fullscreenIcon = document.getElementById('fullscreen-icon');
+    const fullscreenText = document.getElementById('fullscreen-text');
+
+    if (!isFullscreen) {
+        // Enter fullscreen
+        document.body.classList.add('fullscreen');
+        fullscreenIcon.textContent = '⛉';
+        fullscreenText.textContent = 'Exit Fullscreen';
+
+        // Request browser fullscreen if supported
+        if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(err => {
+                console.log('Fullscreen request failed:', err);
+            });
+        } else if (document.documentElement.webkitRequestFullscreen) {
+            document.documentElement.webkitRequestFullscreen();
+        } else if (document.documentElement.msRequestFullscreen) {
+            document.documentElement.msRequestFullscreen();
+        }
+
+    } else {
+        // Exit fullscreen
+        document.body.classList.remove('fullscreen');
+        fullscreenIcon.textContent = '⛶';
+        fullscreenText.textContent = 'Fullscreen';
+
+        // Exit browser fullscreen if supported
+        if (document.exitFullscreen) {
+            document.exitFullscreen().catch(err => {
+                console.log('Exit fullscreen failed:', err);
+            });
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+    }
+
+    // Trigger map resize after fullscreen change
+    setTimeout(() => {
+        if (map) {
+            map.invalidateSize();
+        }
+    }, 100);
+}
+
+// Control panel minimize/expand functionality
+function toggleControlPanel() {
+    const controlPanel = document.querySelector('.control-panel');
+    const minimizeIcon = document.getElementById('minimize-icon');
+    const isMinimized = controlPanel.classList.contains('minimized');
+
+    if (isMinimized) {
+        // Expand the panel
+        controlPanel.classList.remove('minimized');
+        minimizeIcon.textContent = '−';
+        minimizeIcon.setAttribute('title', 'Hide Controls');
+    } else {
+        // Minimize the panel
+        controlPanel.classList.add('minimized');
+        minimizeIcon.textContent = '+';
+        minimizeIcon.setAttribute('title', 'Show Controls');
+    }
+
+    // Trigger map resize after panel change
+    setTimeout(() => {
+        if (map) {
+            map.invalidateSize();
+        }
+    }, 300); // Match the CSS transition duration
+}
+
+// Listen for fullscreen changes from browser (F11, ESC, etc.)
+document.addEventListener('fullscreenchange', handleFullscreenChange);
+document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+function handleFullscreenChange() {
+    const isInFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+    const bodyHasFullscreen = document.body.classList.contains('fullscreen');
+
+    // Sync our CSS class with browser fullscreen state
+    if (!isInFullscreen && bodyHasFullscreen) {
+        document.body.classList.remove('fullscreen');
+        document.getElementById('fullscreen-icon').textContent = '⛶';
+        document.getElementById('fullscreen-text').textContent = 'Fullscreen';
+    }
+
+    // Resize map when fullscreen changes
+    setTimeout(() => {
+        if (map) {
+            map.invalidateSize();
+        }
+    }, 100);
 }
 
 // Start the application when DOM is loaded
